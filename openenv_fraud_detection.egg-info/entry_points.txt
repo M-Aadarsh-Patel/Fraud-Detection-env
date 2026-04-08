@@ -1,0 +1,2 @@
+[console_scripts]
+server = fraud_detection.server.app:main
