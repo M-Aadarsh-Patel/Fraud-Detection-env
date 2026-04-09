@@ -3,8 +3,12 @@ import os
 
 from openai import OpenAI
 
-from .client import FraudDetectionEnv
-from .models import FraudDetectionAction
+try:
+    from .client import FraudDetectionEnv
+    from .models import FraudDetectionAction
+except ImportError:
+    from client import FraudDetectionEnv
+    from models import FraudDetectionAction
 
 # Configuration
 
