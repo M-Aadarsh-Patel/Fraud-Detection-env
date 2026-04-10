@@ -237,7 +237,7 @@ class FraudDetectionEnvironment(Environment):
         combined += self._penalties
         if decision_score >= 0.8 and self._state.step_count <= self._state.max_steps // 2:
             combined += 0.05
-        final_score = max(0.0, min(1.0, combined))
+        final_score = max(0.01, min(0.99, combined))
 
         self._state.score = final_score
 
