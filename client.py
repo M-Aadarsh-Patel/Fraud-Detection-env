@@ -11,8 +11,10 @@ from openenv.core import EnvClient
 from openenv.core.client_types import StepResult
 from openenv.core.env_server.types import State
 
-from .models import FraudDetectionAction, FraudDetectionObservation, FraudDetectionState
-from .models import SignalResult
+try:
+    from .models import FraudDetectionAction, FraudDetectionObservation, FraudDetectionState, SignalResult
+except ImportError:
+    from models import FraudDetectionAction, FraudDetectionObservation, FraudDetectionState, SignalResult
 
 
 class FraudDetectionEnv(
