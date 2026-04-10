@@ -16,6 +16,7 @@ API_KEY = os.getenv("HF_TOKEN") or os.getenv("API_KEY")
 API_BASE_URL = os.getenv("API_BASE_URL") or "https://router.huggingface.co/v1"
 MODEL_NAME = os.getenv("MODEL_NAME") or "Qwen/Qwen2.5-72B-Instruct"
 LOCAL_IMAGE_NAME = os.getenv("LOCAL_IMAGE_NAME")
+ENV_URL = os.getenv("ENV_URL") or os.getenv("ENVIRONMENT_URL") or "http://localhost:8000"
 
 BENCHMARK = "fraud_detection"
 TASKS = ["task_easy", "task_medium", "task_hard"]
@@ -120,21 +121,19 @@ def log_end(success, steps, score, rewards):
 
 # Main loop
 
-
 async def main():
-    client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY)
-
     if not API_KEY:
         print("[DEBUG] API_KEY / HF_TOKEN environment variable is not set", flush=True)
         return
 
-    if not LOCAL_IMAGE_NAME:
-        print("[DEBUG] LOCAL_IMAGE_NAME environment variable is not set", flush=True)
-        return
+    client = OpenAI(base_url=API_BASE_URL, api_key=API_KEY)
 
     for task_id in TASKS:
         for seed in SEEDS:
-            env = await FraudDetectionEnv.from_docker_image(LOCAL_IMAGE_NAME)
+            if LOCAL_IMAGE_NAME:
+                env = await FraudDetectionEnv.from_docker_image(LOCAL_IMAGE_NAME)
+            else:
+                env = FraudDetectionEnv(base_url=ENV_URL)
             rewards = []
             steps_taken = 0
             score = 0.0
